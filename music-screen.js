@@ -14,6 +14,7 @@ class MusicScreen {
             this.changeScreen = changeScreen;
             this.response = response;
             this.buttonStatus = this.buttonStatus.bind(this);
+            this.changeGif = this.changeGif.bind(this);
 
             const div = document.createElement('div');
             div.style.width = '100%';
@@ -37,6 +38,7 @@ class MusicScreen {
             this.containerElement.appendChild(div);
             this.containerElement.appendChild(footer);
             this.ap = new AudioPlayer();
+            this.ap.setKickCallback(this.changeGif);
             this.ap.setSong(this.response.url);
             this.gd = new GifDisplay(this.response.theme);
             this.pb = new PlayButton(this.buttonStatus);
@@ -49,6 +51,9 @@ class MusicScreen {
             this.ap.pause();
             this.gd.changeGif();
         }
+    }
+    changeGif() {
+        this.gd.changeGif();
     }
     show() {
         this.containerElement.classList.remove('inactive');

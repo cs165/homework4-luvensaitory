@@ -7,7 +7,6 @@ class MenuScreen {
             // TODO(you): Implement the constructor and add fields as necessary.
             this.songsURL = [];
             this.res = {};
-            this.url = "";
             this.containerElement = containerElement;
             this._onSubmit = this._onSubmit.bind(this);
             this.changeScreen = changeScreen;
@@ -34,17 +33,7 @@ class MenuScreen {
             }
 
             fetch('https://fullstackccu.github.io/homeworks/hw4/songs.json').then(onResponse, onError).then(onStreamProcessed);
-            console.log(this.songsURL);
-            const selectList = document.querySelector('#song-selector');
-            selectList.addEventListener('change', () => {
-                const index = selectList.selectedIndex;
-                for (let idx = 0; idx < this.songsURL.length; idx++) {
-                    if (idx === index) {
-                        this.url = this.songsURL[idx];
-                        break;
-                    }
-                }
-            });
+
             const themeList = ['candy', 'charlie brown', 'computers', 'dance', 'donuts', 'hello kitty', 'flowers', 'nature', 'turtles', 'space'];
             const theme = document.querySelector('#query-input');
             theme.value = themeList[Math.floor(Math.random() * themeList.length)];
@@ -54,9 +43,16 @@ class MenuScreen {
         // TODO(you): Add methods as necessary.
     _onSubmit() {
         event.preventDefault();
-        const themeName = document.querySelector('#query-input').value;
         const res = {};
-        res.url = this.url;
+        const themeName = document.querySelector('#query-input').value;
+        const selectList = document.querySelector('#song-selector');
+        const index = selectList.selectedIndex;
+        for (let idx = 0; idx < this.songsURL.length; idx++) {
+            if (idx === index) {
+                res.url = this.songsURL[idx];
+                break;
+            }
+        }
         res.theme = themeName;
         this.res = res;
         console.log(this.res);
