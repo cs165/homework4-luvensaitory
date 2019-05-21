@@ -7,6 +7,7 @@ class MenuScreen {
             // TODO(you): Implement the constructor and add fields as necessary.
             this.songsURL = [];
             this.res = {};
+            this.xhr;
             this.containerElement = containerElement;
             this._onSubmit = this._onSubmit.bind(this);
             this.changeScreen = changeScreen;
@@ -45,18 +46,26 @@ class MenuScreen {
         event.preventDefault();
         const res = {};
         const themeName = document.querySelector('#query-input').value;
-        const selectList = document.querySelector('#song-selector');
-        const index = selectList.selectedIndex;
-        for (let idx = 0; idx < this.songsURL.length; idx++) {
-            if (idx === index) {
-                res.url = this.songsURL[idx];
-                break;
+        this.xhr = $.get("http://api.giphy.com/v1/gifs/search?q=" + encodeURIComponent(themeName) + "&api_key=lT7knDG97pS7U556L3cQjWVDPQe8TrMA&limit=25&rating=g");
+        this.xhr.done((data) => {
+            if (data.data.length < 2) {
+                const div = document.querySelector('#error');
+                div.classList.remove("inactive");
+            } else {
+                const selectList = document.querySelector('#song-selector');
+                const index = selectList.selectedIndex;
+                for (let idx = 0; idx < this.songsURL.length; idx++) {
+                    if (idx === index) {
+                        res.url = this.songsURL[idx];
+                        break;
+                    }
+                }
+                res.theme = themeName;
+                this.res = res;
+                this.changeScreen('showMusic');
             }
-        }
-        res.theme = themeName;
-        this.res = res;
-        console.log(this.res);
-        this.changeScreen('showMusic');
+        })
+
     }
 
     show() {
